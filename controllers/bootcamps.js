@@ -10,9 +10,50 @@ module.exports = {
      * @route   GET /api/v1/bootcamps
      * @access  Public
      */
-    async getBootcamps(req, res, next) {   
-        const bootcamps = await Bootcamp.find({});
-        res.status(200).json({success: true, data: {bootcamps, count: bootcamps.length}});
+    async getBootcamps(req, res, next) {
+        // remove the select query
+        const reqQuery = {...req.query};
+        const fieldsToRemove = ['select', 'sort', 'page', 'limit'];
+        fieldsToRemove.forEach(param => delete reqQuery[param]);
+        
+        // create operators ($gte, $gt, etc...)
+        let queryStr = JSON.stringify(reqQuery);
+        queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+
+
+        const query = Bootcamp.find(JSON.parse(queryStr));
+
+        // select query
+        if(req.query.select){
+            const selectedFields = req.query.select.replace(/[, ]/g, match => match === ',' ? ' ': '');
+            query.select(selectedFields);
+        }
+
+        // Sorting
+        const sortBy = !req.query.sort ? '-createdAt' : req.query.sort.replace(/[, ]/g, match => match === ',' ? ' ': '');
+        query.sort(sortBy);
+        
+
+        // Pagination
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = parseInt(req.query.limit, 10) || 25;
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const total = await Bootcamp.countDocuments();
+
+        query.skip(startIndex).limit(limit);
+
+        // execute query
+        const bootcamps = await query;
+
+        // Pagination result
+        const pagination = {
+            next: endIndex < total ? page + 1 : null,
+            prev: startIndex > 0 ? page - 1 : null,
+            limit
+        };
+
+        res.status(200).json({success: true, data: {bootcamps, count: bootcamps.length, pagination}});
     },
     /**
      * @desc    Get single bootcamp
