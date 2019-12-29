@@ -26,7 +26,7 @@ if(process.env.NODE_ENV === 'development'){
 }
 
 // routes middleware
-app.use(routes);
+app.use('/api/v1', routes);
 
 // error handler middleware
 app.use(errorHandler);
