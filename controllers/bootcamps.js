@@ -1,5 +1,5 @@
 const ErrorResponse = require('../utils/ErrorResponse');
-const Bootcamp = require('../models/Bootcamps');
+const Bootcamp = require('../models/Bootcamp');
 
 const geocoder = require('../utils/geocoder');
 
