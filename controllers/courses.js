@@ -66,4 +66,38 @@ module.exports = {
 
         res.status(201).json({success: true, data: { course }});
     },
+    /**
+     * @desc    Update a courses
+     * @route   PUT /api/v1/courses/:id
+     * @access  Private
+    */
+    async updateCourse(req, res, next){
+        const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
+            runValidators: true,
+            new: true
+        });
+
+        if(!course){
+            throw new ErrorResponse(`No course with the id of ${req.params.id}`, 404);
+        }
+
+        res.status(200).json({success: true, data: { course }});
+    },
+    /**
+     * @desc    Delete a courses
+     * @route   DELETE /api/v1/courses/:id
+     * @access  Private
+    */
+    async deleteCourse(req, res, next){
+        const course = await Course.findById(req.params.id, '');
+
+        console.log(course);
+        if(!course){
+            throw new ErrorResponse(`No course with the id of ${req.params.id}`, 404);
+        }
+
+        await course.remove();
+
+        res.status(200).json({success: true, data: { }});
+    },
 }
