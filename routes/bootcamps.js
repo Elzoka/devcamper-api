@@ -1,6 +1,6 @@
 const express = require('express');
 
-const {getBootcamps, getBootcamp, createBootcamp, updateBootcamp, deleteBootcamp, getBootcampsInRadius} = require('../controllers/bootcamps');
+const {getBootcamps, getBootcamp, createBootcamp, updateBootcamp, deleteBootcamp, getBootcampsInRadius, bootcampPhotoUpload} = require('../controllers/bootcamps');
 const asyncHandler = require('../middleware/asyncHandler');
 
 // Include other resourse routers
@@ -14,6 +14,10 @@ router.use('/:bootcampId/courses', courseRouter);
 router
     .route('/radius/:zipcode/:distance')
     .get(asyncHandler(getBootcampsInRadius));
+
+router
+    .route('/:id/photo')
+    .put(asyncHandler(bootcampPhotoUpload));
 
 router
     .route('/')
