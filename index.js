@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 const colors = require('colors');
 const fileupload = require('express-fileupload');
 
@@ -22,6 +23,9 @@ const app = express();
 
 // Body parser
 app.use(express.json());
+
+1// Cookie Parser
+app.use(cookieParser());
 
 // logger
 if(process.env.NODE_ENV === 'development'){

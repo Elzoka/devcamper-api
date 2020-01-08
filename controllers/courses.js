@@ -1,4 +1,5 @@
 const ErrorResponse = require('../utils/ErrorResponse');
+const asyncHandler = require('../middleware/asyncHandler');
 const Course = require('../models/Course');
 const Bootcamp = require('../models/Bootcamp');
 
@@ -10,9 +11,9 @@ module.exports = {
      * @access  Public
     */
 
-    async getCourses(req, res, next){
+    getCourses: asyncHandler(async (req, res, next) => {
         if(req.params.bootcampId){
-            const courses = await Course.find(req.params.bootcampId).populate('bootcamp', 'name description');
+            const courses = await Course.find({bootcamp: req.params.bootcampId}).populate('bootcamp', 'name description');
             
             return res.status(200).json({
                 success: true,
@@ -24,7 +25,7 @@ module.exports = {
         }
 
         res.status(200).json(res.advancedResults);
-    },
+    }),
 
     /**
      * @desc    Get a single courses
@@ -32,7 +33,7 @@ module.exports = {
      * @access  Public
     */
 
-    async getCourse(req, res, next){
+    getCourse: asyncHandler(async (req, res, next) => {
         const course = await Course.findById(req.params.id).populate('bootcamp', 'name description');
 
         if(!course){
@@ -45,13 +46,13 @@ module.exports = {
                 course
             }
         })
-    },
+    }),
     /**
      * @desc    Add a courses
      * @route   POST /api/v1/bootcamps/:bootcampId/courses
      * @access  Private
     */
-    async addCourse(req, res, next){
+    addCourse: asyncHandler(async (req, res, next) => {
         req.body.bootcamp = req.params.bootcampId;
 
         const bootcamp = Bootcamp.findById(req.params.bootcampId, '');
@@ -63,13 +64,13 @@ module.exports = {
         const course = await Course.create(req.body);
 
         res.status(201).json({success: true, data: { course }});
-    },
+    }),
     /**
      * @desc    Update a courses
      * @route   PUT /api/v1/courses/:id
      * @access  Private
     */
-    async updateCourse(req, res, next){
+    updateCourse: asyncHandler(async (req, res, next) => {
         const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
             runValidators: true,
             new: true
@@ -80,13 +81,13 @@ module.exports = {
         }
 
         res.status(200).json({success: true, data: { course }});
-    },
+    }),
     /**
      * @desc    Delete a courses
      * @route   DELETE /api/v1/courses/:id
      * @access  Private
     */
-    async deleteCourse(req, res, next){
+    deleteCourse: asyncHandler(async (req, res, next) => {
         const course = await Course.findById(req.params.id, '');
 
         console.log(course);
@@ -97,5 +98,5 @@ module.exports = {
         await course.remove();
 
         res.status(200).json({success: true, data: { }});
-    },
+    }),
 }
