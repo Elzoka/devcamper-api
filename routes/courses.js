@@ -1,6 +1,7 @@
 const express = require('express');
 
 const {getCourses, getCourse, addCourse, updateCourse, deleteCourse} = require('../controllers/courses');
+
 const advancedResults = require('../middleware/advancedResults');
 const {protect, authorize} = require('../middleware/auth');
 
