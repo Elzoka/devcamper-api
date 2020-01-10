@@ -67,6 +67,54 @@ module.exports = {
         });
     }),
      /**
+     * @desc   Update user details
+     * @route  PUT /api/v1/auth/updatedetails
+     * @access Private
+     */
+    updateDetails: asyncHandler(async (req, res, any) => {
+        const {name, email} = req.body;
+        const fieldsToUpdate = {}
+
+        if(name) fieldsToUpdate.name = name;
+        if(email) fieldsToUpdate.email = email;
+
+        const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {new: true, runValidators: true});
+
+        res.status(200).json({
+            success: true,
+            data: {
+                user
+            }
+        });
+    }),
+     /**
+     * @desc   Update user password
+     * @route  PUT /api/v1/auth/updatepassword
+     * @access Private
+     */
+    updatePassword: asyncHandler(async (req, res, any) => {
+        const user = await User.findById(req.user.id, 'password');
+
+        // Check current password
+        const passwordMatch = await user.matchPassword(req.body.currentPassword);
+
+        if(!passwordMatch){
+            throw new ErrorResponse(`Password is incorrect`, 401);
+        }
+
+        user.password = req.body.newPassword;
+        await user.save();
+
+        sendTokenResponse(user, 200, res);
+
+        // res.status(200).json({
+        //     success: true,
+        //     data: {
+        //         user
+        //     }
+        // });
+    }),
+     /**
      * @desc   Forget password
      * @route  POST /api/v1/auth/forgotpassword
      * @access Public

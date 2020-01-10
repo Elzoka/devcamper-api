@@ -24,7 +24,7 @@ const app = express();
 // Body parser
 app.use(express.json());
 
-1// Cookie Parser
+// Cookie Parser
 app.use(cookieParser());
 
 // logger
