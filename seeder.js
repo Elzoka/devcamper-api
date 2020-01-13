@@ -15,7 +15,7 @@ const Review = require('./models/Review');
 
 
 // connnect to db
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect("mongodb://heroku_brr78vtx:nhfqj70c1v8hhlkc9bjc9pndio@ds263248.mlab.com:63248/heroku_brr78vtx", {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
@@ -74,6 +74,8 @@ if(flag === '-i'){
         })
 }
 
-operation.then(() => {
-    process.exit();
-});
+if(operation){
+    operation.then(() => {
+        process.exit();
+    });
+}
