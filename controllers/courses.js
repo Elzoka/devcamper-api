@@ -93,6 +93,8 @@ module.exports = {
             new: true
         });
 
+        await Course.getAverageCost(course.bootcamp);
+
         res.status(200).json({success: true, data: { course }});
     }),
     /**
