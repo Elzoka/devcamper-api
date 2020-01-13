@@ -2,6 +2,9 @@
 
 > Backend API for DevCamper application, which is a bootcamp directory website
 
+## Live version
+https://morning-waters-40206.herokuapp.com/
+
 ## Usage
 
 Rename "config/config.env-ex" to "config/config.env" and update the values/settings to your own
