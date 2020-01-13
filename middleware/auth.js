@@ -9,14 +9,13 @@ module.exports = {
     protect: asyncHandler(async (req, res, next) => {
         let token;
         const headerToken = req.headers.authorization;
-        // const cookieToken = req.cookies.token;
+        const cookieToken = req.cookies.token;
 
         if(headerToken && headerToken.startsWith('Bearer')){
             token = headerToken.split(' ')[1];
+        }else if(cookieToken){
+            token = cookieToken;
         }
-        // else if(cookieToken){
-        //     token = cookieToken;
-        // }
 
         // Make sure token exists
         if(!token){
@@ -27,7 +26,7 @@ module.exports = {
             // verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            const user = await User.findById(decoded.id, 'id role');
+            const user = await User.findById(decoded.id, 'role');
 
             if(!user){
                 throw new Error();

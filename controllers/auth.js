@@ -52,6 +52,18 @@ module.exports = {
         sendTokenResponse(user, 200, res);
     }),
      /**
+     * @desc   Log user out
+     * @route  GET /api/v1/auth/logout
+     * @access Private
+     */
+    logout: asyncHandler(async (req, res, any) => {
+        res.cookie('token', 'none', {maxAge: 1000 * 10, httpOnly: true});
+        res.status(200).json({
+            success: true,
+            data: {}
+        });
+    }),
+     /**
      * @desc   get current logged in user
      * @route  POST /api/v1/auth/me
      * @access Private
